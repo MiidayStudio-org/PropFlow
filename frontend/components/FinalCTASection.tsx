@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { ScaleIn, Magnetic } from "./motion/primitives";
 
 export function FinalCTASection() {
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ export function FinalCTASection() {
     /* ========================================================= */
     /* 05. FULL-WIDTH CALL-TO-ACTION BANNER                      */
     /* ========================================================= */
-    <section id="cta" className="w-full bg-[#FF5C1C] text-white py-24 px-6">
+    <section id="cta" className="w-full bg-[#FF5C1C] text-white py-24 px-6 scroll-mt-20">
       <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
         {/* Tag Pill */}
         <div className="inline-flex items-center gap-2 bg-black/15 text-white/90 px-4 py-1.5 rounded-full text-xs font-medium mb-8 backdrop-blur-sm">
@@ -24,12 +25,14 @@ export function FinalCTASection() {
           05 // Start Managing Your Agency
         </div>
 
-        {/* Headline */}
-        <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.1] max-w-3xl">
-          Your Next Deal Shouldn&apos;t Get Lost In A Spreadsheet
-        </h2>
+        {/* Headline with ScaleIn */}
+        <ScaleIn duration={0.6}>
+          <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.1] max-w-3xl">
+            Your Next Deal Shouldn&apos;t Get Lost In A Spreadsheet
+          </h2>
+        </ScaleIn>
 
-        {/* Input & Button Container */}
+        {/* Input & Button Container with Magnetic Hover */}
         <form onSubmit={handleSubmit} className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-md">
           <input
             type="email"
@@ -38,13 +41,15 @@ export function FinalCTASection() {
             placeholder="Enter your agency email..."
             className="w-full px-6 py-4 rounded-full bg-white text-[#111111] placeholder:text-neutral-400 text-sm focus:outline-none shadow-sm"
           />
-          <button
-            type="submit"
-            className="w-full sm:w-auto bg-[#111111] hover:bg-black text-white px-8 py-4 rounded-full text-sm font-semibold whitespace-nowrap flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
-          >
-            <span>Start for Free Today</span>
-            <span className="text-xs">↗</span>
-          </button>
+          <Magnetic strength={8}>
+            <button
+              type="submit"
+              className="w-full sm:w-auto bg-[#111111] hover:bg-black text-white px-8 py-4 rounded-full text-sm font-semibold whitespace-nowrap flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
+            >
+              <span>Start for Free Today</span>
+              <span className="text-xs">↗</span>
+            </button>
+          </Magnetic>
         </form>
 
         {/* Trust Badges */}

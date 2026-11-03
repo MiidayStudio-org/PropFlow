@@ -1,9 +1,13 @@
 "use client";
 
 import React from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { XCircle, CheckCircle2 } from "./icons";
+import { Reveal } from "./motion/primitives";
 
 export function ProblemSolutionSection() {
+  const shouldReduceMotion = useReducedMotion();
+
   const problemPoints = [
     { title: "Manual Portal Searching", desc: "Hours wasted manually browsing 99acres & Housing.com for listings." },
     { title: "Duplicate Inventory", desc: "Scattered data leading to conflicting prices and double agent listings." },
@@ -19,7 +23,7 @@ export function ProblemSolutionSection() {
   ];
 
   return (
-    <section id="scraper-service" className="py-24 md:py-28 bg-[#FAF7F2] text-[#111111] border-b border-[#EAE3D8]">
+    <section id="scraper-service" className="py-24 md:py-28 bg-[#FAF7F2] text-[#111111] border-b border-[#EAE3D8] scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#FDEEE6] border border-[#FF5C1C]/20 text-[#FF5C1C] text-xs font-semibold uppercase tracking-wider mb-4">
@@ -41,55 +45,73 @@ export function ProblemSolutionSection() {
 
         {/* 2-Column Comparison Cards with Deep rounded-3xl borders */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Old Manual Chaos */}
-          <div className="rounded-3xl bg-white border border-[#EAE3D8] p-7 sm:p-9 shadow-sm">
-            <div className="flex items-center gap-3.5 mb-6">
-              <div className="w-10 h-10 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center font-bold">
-                ✕
-              </div>
-              <div>
-                <h3 className="text-xl font-serif font-bold text-[#111111]">Unorganized Manual Chaos</h3>
-                <p className="text-xs text-[#7A7A7A] font-sans">The traditional agency struggle</p>
-              </div>
-            </div>
-
-            <div className="space-y-4 font-sans">
-              {problemPoints.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-3.5 p-4 rounded-2xl bg-[#FAF7F2] border border-[#EAE3D8]/70">
-                  <XCircle size={18} className="text-red-500 shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="text-sm font-semibold text-[#111111]">{item.title}</h4>
-                    <p className="text-xs text-[#7A7A7A] mt-0.5 leading-relaxed">{item.desc}</p>
-                  </div>
+          {/* Old Manual Chaos - Slides in from left */}
+          <Reveal direction="left" duration={0.65}>
+            <div className="rounded-3xl bg-white border border-[#EAE3D8] p-7 sm:p-9 shadow-sm h-full">
+              <div className="flex items-center gap-3.5 mb-6">
+                <div className="w-10 h-10 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center font-bold">
+                  ✕
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* PropFlow Automated Engine */}
-          <div className="rounded-3xl bg-[#FDEEE6] border border-[#FF5C1C]/25 p-7 sm:p-9 shadow-sm">
-            <div className="flex items-center gap-3.5 mb-6">
-              <div className="w-10 h-10 rounded-2xl bg-[#FF5C1C] text-white flex items-center justify-center font-bold">
-                ✓
-              </div>
-              <div>
-                <h3 className="text-xl font-serif font-bold text-[#111111]">PropFlow Automated Engine</h3>
-                <p className="text-xs text-[#FF5C1C] font-sans font-semibold">Playwright Scraper + AI Telemetry</p>
-              </div>
-            </div>
-
-            <div className="space-y-4 font-sans">
-              {solutionPoints.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-3.5 p-4 rounded-2xl bg-white border border-[#FF5C1C]/20 shadow-xs">
-                  <CheckCircle2 size={18} className="text-[#FF5C1C] shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="text-sm font-semibold text-[#111111]">{item.title}</h4>
-                    <p className="text-xs text-[#7A7A7A] mt-0.5 leading-relaxed">{item.desc}</p>
-                  </div>
+                <div>
+                  <h3 className="text-xl font-serif font-bold text-[#111111]">Unorganized Manual Chaos</h3>
+                  <p className="text-xs text-[#7A7A7A] font-sans">The traditional agency struggle</p>
                 </div>
-              ))}
+              </div>
+
+              <div className="space-y-4 font-sans">
+                {problemPoints.map((item, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: idx * 0.08 }}
+                    className="flex items-start gap-3.5 p-4 rounded-2xl bg-[#FAF7F2] border border-[#EAE3D8]/70"
+                  >
+                    <XCircle size={18} className="text-red-500 shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="text-sm font-semibold text-[#111111]">{item.title}</h4>
+                      <p className="text-xs text-[#7A7A7A] mt-0.5 leading-relaxed">{item.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
-          </div>
+          </Reveal>
+
+          {/* PropFlow Automated Engine - Slides in from right */}
+          <Reveal direction="right" duration={0.65}>
+            <div className="rounded-3xl bg-[#FDEEE6] border border-[#FF5C1C]/25 p-7 sm:p-9 shadow-sm h-full">
+              <div className="flex items-center gap-3.5 mb-6">
+                <div className="w-10 h-10 rounded-2xl bg-[#FF5C1C] text-white flex items-center justify-center font-bold">
+                  ✓
+                </div>
+                <div>
+                  <h3 className="text-xl font-serif font-bold text-[#111111]">PropFlow Automated Engine</h3>
+                  <p className="text-xs text-[#FF5C1C] font-sans font-semibold">Playwright Scraper + AI Telemetry</p>
+                </div>
+              </div>
+
+              <div className="space-y-4 font-sans">
+                {solutionPoints.map((item, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: idx * 0.08 }}
+                    className="flex items-start gap-3.5 p-4 rounded-2xl bg-white border border-[#FF5C1C]/20 shadow-xs"
+                  >
+                    <CheckCircle2 size={18} className="text-[#FF5C1C] shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="text-sm font-semibold text-[#111111]">{item.title}</h4>
+                      <p className="text-xs text-[#7A7A7A] mt-0.5 leading-relaxed">{item.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>

@@ -3,6 +3,7 @@ import * as cheerio from "cheerio";
 import fs from "fs";
 import path from "path";
 import { PropertyListing } from "../src/types";
+import { prisma } from "../src/lib/prisma";
 
 // ==========================================
 // TARGET CONFIGURATION
@@ -354,6 +355,8 @@ export async function runMaharashtraScraper() {
     const scraped = await scrapeTargetUrl(target);
     allListings.push(...scraped);
     cityCounts[target.city] = (cityCounts[target.city] || 0) + scraped.length;
+    // Throttle requests between targets to respect server rate-limits
+    await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 
   // Always supplement with full seed list to guarantee rich multi-city coverage
@@ -384,8 +387,64 @@ export async function runMaharashtraScraper() {
   const outputPath = path.join(dataDir, "maharashtra_properties.json");
   fs.writeFileSync(outputPath, JSON.stringify(finalResults, null, 2), "utf-8");
 
+  // Upsert into Prisma Database (keyed on externalId / sourceUrl)
+  console.log("💾 Upserting properties into PostgreSQL database via Prisma...");
+  let upsertedCount = 0;
+  for (const item of finalResults) {
+    const externalId = item.id;
+    const sourceUrl = item.sourceUrl || `https://housing.com/in/buy/${item.location.city.toLowerCase()}/${item.id}`;
+    const bedrooms = item.bhk.includes("1") ? 1 : item.bhk.includes("3") ? 3 : item.bhk.includes("4") ? 4 : 2;
+    const bathrooms = bedrooms >= 3 ? 3 : bedrooms >= 2 ? 2 : 1;
+
+    try {
+      await prisma.property.upsert({
+        where: { externalId },
+        update: {
+          title: item.title,
+          price: item.numericPrice,
+          carpetAreaSqFt: item.carpetAreaSqFt,
+          bedrooms,
+          bathrooms,
+          locality: item.location.locality,
+          city: item.location.city,
+          address: `${item.location.locality}, ${item.location.city}, Maharashtra`,
+          amenities: item.features,
+          images: item.imageUrl ? [item.imageUrl] : [],
+          sourcePortal: "Housing.com",
+          sourceUrl,
+          scrapedAt: new Date(),
+        },
+        create: {
+          externalId,
+          sourcePortal: "Housing.com",
+          sourceUrl,
+          title: item.title,
+          description: `${item.bhk} apartment in ${item.location.locality}, ${item.location.city}`,
+          propertyType: "APARTMENT",
+          listingType: "SALE",
+          price: item.numericPrice,
+          currency: "INR",
+          carpetAreaSqFt: item.carpetAreaSqFt,
+          bedrooms,
+          bathrooms,
+          furnishingStatus: "SEMI_FURNISHED",
+          address: `${item.location.locality}, ${item.location.city}, Maharashtra`,
+          locality: item.location.locality,
+          city: item.location.city,
+          amenities: item.features,
+          images: item.imageUrl ? [item.imageUrl] : [],
+          scrapedAt: new Date(),
+        },
+      });
+      upsertedCount++;
+    } catch (err) {
+      console.warn(`[Prisma Upsert Warning] Skipping ${externalId}:`, err);
+    }
+  }
+
   console.log("==================================================");
   console.log(`✅ Scrape Complete! Total Cleaned Properties: ${finalResults.length}`);
+  console.log(`🗄️ Upserted to PostgreSQL Database: ${upsertedCount} rows`);
   console.log("--------------------------------------------------");
   Object.entries(cityCounts).forEach(([city, count]) => {
     console.log(` 📍 ${city}: ${count} properties`);

@@ -64,3 +64,112 @@ model Property {
   @@index([price, bedrooms])
   @@map("properties")
 }
+
+enum LeadIntent {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  VISIT_SCHEDULED
+  NEGOTIATION
+  CLOSED
+}
+
+enum VisitStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum DealStage {
+  NEGOTIATION
+  TOKEN_PAID
+  AGREEMENT_SIGNED
+  REGISTRATION_DONE
+  CLOSED
+}
+
+model Lead {
+  id                  String       @id @default(uuid())
+  name                String
+  phone               String
+  email               String?
+  intent              LeadIntent   @default(MEDIUM)
+  status              LeadStatus   @default(NEW)
+  budgetMin           Float
+  budgetMax           Float
+  preferredBhk        String
+  preferredLocalities String[]
+  notes               String?
+  assignedBrokerId    String?
+  assignedBroker      Broker?      @relation(fields: [assignedBrokerId], references: [id])
+  siteVisits          SiteVisit[]
+  deals               Deal[]
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  @@index([status, intent])
+  @@map("leads")
+}
+
+model Broker {
+  id          String   @id @default(uuid())
+  name        String
+  email       String   @unique
+  phone       String?
+  role        String   @default("Senior Broker")
+  status      String   @default("Active")
+  dealsClosed Int      @default(0)
+  revenue     Float    @default(0)
+  activeDeals Int      @default(0)
+  avatar      String?
+  leads       Lead[]
+  deals       Deal[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("brokers")
+}
+
+model SiteVisit {
+  id          String      @id @default(uuid())
+  leadId      String
+  lead        Lead        @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  propertyId  String?
+  scheduledAt DateTime
+  status      VisitStatus @default(PENDING)
+  agentName   String?
+  notes       String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([leadId])
+  @@map("site_visits")
+}
+
+model Deal {
+  id              String    @id @default(uuid())
+  title           String
+  leadId          String
+  lead            Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  propertyId      String?
+  brokerId        String?
+  broker          Broker?   @relation(fields: [brokerId], references: [id], onDelete: SetNull)
+  stage           DealStage @default(NEGOTIATION)
+  buyerBid        Float
+  builderAsk      Float
+  agreedPrice     Float?
+  brokeragePct    Float     @default(2.0)
+  brokerageAmount Float?
+  status          String    @default("ACTIVE")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([leadId])
+  @@map("deals")
+}

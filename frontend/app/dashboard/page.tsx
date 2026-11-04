@@ -198,8 +198,8 @@ export default function DashboardPage() {
   const getWhatsAppLink = (phone: string, name: string, propTitle?: string) => {
     const cleanDigits = cleanPhoneForWhatsApp(phone);
     const msg = propTitle
-      ? `Hi ${name}, Vikram here from PropFlow! We found a high-scoring matching property for your requirement: "${propTitle}". Would you like to schedule a physical walkthrough this weekend?`
-      : `Hi ${name}, Vikram here from PropFlow! I have updated property intelligence matching your requirements. Let me know when you'd like to connect.`;
+      ? `Hi ${name}, Vikram here from PropIQ! We found a high-scoring matching property for your requirement: "${propTitle}". Would you like to schedule a physical walkthrough this weekend?`
+      : `Hi ${name}, Vikram here from PropIQ! I have updated property intelligence matching your requirements. Let me know when you'd like to connect.`;
     return `https://wa.me/${cleanDigits}?text=${encodeURIComponent(msg)}`;
   };
 
@@ -240,14 +240,14 @@ export default function DashboardPage() {
               <div className="w-8 h-8 rounded-lg bg-[#FF5C1C] p-1 flex items-center justify-center text-white font-bold shadow-xs group-hover:scale-105 transition-transform shrink-0">
                 <Image
                   src="/logo.svg"
-                  alt="PropFlow Logo"
+                  alt="PropIQ Logo"
                   width={24}
                   height={24}
                   className="w-full h-full object-contain filter invert brightness-200"
                 />
               </div>
               <div>
-                <span className="text-xl font-serif font-bold tracking-tight text-[#111111] leading-none block">PropFlow</span>
+                <span className="text-xl font-serif font-bold tracking-tight text-[#111111] leading-none block">PropIQ</span>
                 <span className="text-[10px] font-sans font-bold text-[#FF5C1C] tracking-wider block mt-0.5">AGENCY WORKSPACE</span>
               </div>
             </Link>
@@ -466,14 +466,14 @@ export default function DashboardPage() {
                     Welcome back, Aarav 👋
                   </h1>
                   <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                    Here is what is happening across your PropFlow Real Estate Agency pipeline today.
+                    Here is what is happening across your PropIQ Real Estate Agency pipeline today.
                   </p>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#FDEEE6] text-[#FF5C1C] border border-[#FF5C1C]/20 text-xs font-bold">
                     <span className="w-2 h-2 rounded-full bg-[#FF5C1C] animate-pulse" />
-                    PropFlow AI Telemetry Active
+                    PropIQ AI Telemetry Active
                   </span>
                 </div>
               </div>
@@ -1100,7 +1100,7 @@ export default function DashboardPage() {
               <div className="p-8 sm:p-10 rounded-3xl bg-[#111111] text-white space-y-6 shadow-xl relative overflow-hidden border border-[#262626]">
                 <div className="flex items-center gap-2 text-[#FF5C1C] text-xs font-mono font-bold tracking-wider">
                   <Sparkles size={16} />
-                  <span>PROPFLOW AUTONOMOUS MATCH ENGINE</span>
+                  <span>PropIQ AUTONOMOUS MATCH ENGINE</span>
                 </div>
 
                 <div className="max-w-2xl space-y-3">

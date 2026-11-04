@@ -34,17 +34,17 @@ export function Navbar() {
           <a
             href="#"
             className="flex items-center gap-2.5 group focus-visible:outline-none"
-            aria-label="PropFlow Home"
+            aria-label="PropIQ Home"
           >
             <div className="relative w-9 h-9 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform">
               <img
                 src="/logo.svg"
-                alt="PropFlow Logo"
+                alt="PropIQ Logo"
                 className="w-full h-full object-cover"
               />
             </div>
             <span className="text-xl font-bold tracking-tight text-white font-sans">
-              PropFlow
+              PropIQ
             </span>
           </a>
 

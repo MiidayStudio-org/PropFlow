@@ -1,7 +1,7 @@
-# 🏢 PropFlow — AI-Powered Real Estate Operating System & CRM
+# 🏢 PropIQ — AI-Powered Real Estate Operating System & CRM
 
 <p align="center">
-  <img src="frontend/public/next.svg" alt="PropFlow Banner" width="220" />
+  <img src="frontend/public/next.svg" alt="PropIQ Banner" width="220" />
 </p>
 
 <p align="center">
@@ -22,7 +22,7 @@
 
 ## 🌟 Overview
 
-**PropFlow** is an enterprise-grade Real Estate Operating System designed to replace fragmented spreadsheets, disconnected WhatsApp chats, and legacy CRMs. It unifies lead capture, automated AI buyer-property matching, site visit logistics, multi-stage deal negotiation, and team commission tracking into a single, cohesive ecosystem.
+**PropIQ** is an enterprise-grade Real Estate Operating System designed to replace fragmented spreadsheets, disconnected WhatsApp chats, and legacy CRMs. It unifies lead capture, automated AI buyer-property matching, site visit logistics, multi-stage deal negotiation, and team commission tracking into a single, cohesive ecosystem.
 
 ---
 
@@ -31,7 +31,7 @@
 The repository is organized as a monorepo containing distinct `frontend` and `backend` modules:
 
 ```text
-propflow/
+PropIQ/
 ├── .gitignore                      # Root git ignore (node_modules, build artifacts, envs)
 ├── README.md                       # Comprehensive project documentation
 ├── backend/                        # Backend microservices, APIs, and AI matching engine
@@ -48,7 +48,7 @@ propflow/
     ├── components/
     │   ├── Navbar.tsx              # Sticky glassmorphic navigation header
     │   ├── Hero.tsx                # Hero section with interactive lead-matching simulator
-    │   ├── ProblemSolutionSection.tsx # Old manual chaos vs PropFlow AI comparison
+    │   ├── ProblemSolutionSection.tsx # Old manual chaos vs PropIQ AI comparison
     │   ├── AIIntelligenceSection.tsx # Algorithm breakdown, MatchScore & predictive tools
     │   ├── WorkflowSection.tsx     # 4-stage pipeline visualization
     │   ├── FinalCTASection.tsx     # Conversion-optimized enterprise CTA section
@@ -73,7 +73,7 @@ A conversion-optimized, responsive marketing experience designed for real estate
 - **`Navbar`**: Floating glassmorphic header with navigation anchors, real-time live deal pulse, and quick actions (`Schedule Demo`, `Launch CRM`).
 - **`Hero`**: Dynamic headline with value proposition, animated metrics badges, and an interactive **Live Deal Matching Simulator** that demonstrates AI scoring in real-time.
 - **`ProblemSolutionSection`**: Side-by-side comparison illustrating the transition from unorganized WhatsApp groups and lost leads to automated pipelines.
-- **`AIIntelligenceSection`**: Visual breakdown of the **PropFlow MatchScore™** engine, automatic site-visit route planner, and buyer intent prediction.
+- **`AIIntelligenceSection`**: Visual breakdown of the **PropIQ MatchScore™** engine, automatic site-visit route planner, and buyer intent prediction.
 - **`WorkflowSection`**: Step-by-step 4-phase visual pipeline:
   1. *Capture & Enrich* (Meta Ads, 99acres, MagicBricks sync)
   2. *Intelligent Match* (Budget, BHK, and locality algorithms)
@@ -85,9 +85,9 @@ A conversion-optimized, responsive marketing experience designed for real estate
 ### 2. Authentication Portal (`frontend/app/login/page.tsx`)
 - **Split-Screen Design**: High-impact brand showcase on the left, interactive form on the right.
 - **1-Click Demo Account Switcher**:
-  - 👑 *Principal Broker* (`broker@propflow.ai`)
-  - 💼 *Senior Agent* (`agent@propflow.ai`)
-  - 🏗️ *Builder Partner* (`builder@propflow.ai`)
+  - 👑 *Principal Broker* (`broker@PropIQ.ai`)
+  - 💼 *Senior Agent* (`agent@PropIQ.ai`)
+  - 🏗️ *Builder Partner* (`builder@PropIQ.ai`)
 - **Interactive Controls**: Password visibility toggle, credentials autofill, "Remember Me" persistence, and error-handling states.
 
 ### 3. Enterprise CRM & Operations Dashboard (`frontend/app/dashboard/page.tsx`)
@@ -157,8 +157,8 @@ The `backend/` directory is architected to house the core microservices and API 
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/syntaxcoder13/propflow.git
-   cd propflow
+   git clone https://github.com/syntaxcoder13/PropIQ.git
+   cd PropIQ
    ```
 
 2. **Navigate to the frontend**:
@@ -194,11 +194,11 @@ The `backend/` directory is architected to house the core microservices and API 
 
 ## 🌐 Deployment Guide (Vercel)
 
-PropFlow is optimized for deployment on **Vercel**:
+PropIQ is optimized for deployment on **Vercel**:
 
 1. Push your repository to GitHub (`main` branch).
 2. Go to [Vercel Dashboard](https://vercel.com/dashboard) and click **Add New Project**.
-3. Import the `syntaxcoder13/propflow` repository.
+3. Import the `syntaxcoder13/PropIQ` repository.
 4. In **Project Settings**:
    - **Root Directory**: Set to `frontend` *(Essential because frontend is in a subfolder)*.
    - **Framework Preset**: `Next.js`
@@ -222,4 +222,4 @@ The application includes enterprise-grade HTTP security headers configured in `f
 
 ## 📄 License
 
-PropFlow is proprietary software. All rights reserved. © 2026 PropFlow AI Inc.
+PropIQ is proprietary software. All rights reserved. © 2026 PropIQ AI Inc.

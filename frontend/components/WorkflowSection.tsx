@@ -74,7 +74,7 @@ const BASE_STEPS: StepData[] = [
     title: "Counter-Offer Mapped",
     tag: "DEAL PIPELINE",
     tagColor: "bg-amber-950/40 text-amber-300 border-amber-800/40",
-    summary: "PropFlow tracks bidder vs builder spread and protects broker commission.",
+    summary: "PropIQ tracks bidder vs builder spread and protects broker commission.",
     details: [
       { label: "Buyer Bid", val: "$870,000" },
       { label: "Developer Counter", val: "$885,000 (Includes Stamp Duty)" },

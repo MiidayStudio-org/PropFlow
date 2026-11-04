@@ -49,15 +49,15 @@ export default function LoginPage() {
         <Link
           href="/"
           className="flex items-center gap-2.5 group focus-visible:outline-none"
-          aria-label="PropFlow Home"
+          aria-label="PropIQ Home"
         >
           <img
             src="/logo.svg"
-            alt="PropFlow Logo"
+            alt="PropIQ Logo"
             className="w-9 h-9 rounded-xl shadow-sm group-hover:scale-105 transition-transform"
           />
           <span className="text-2xl font-serif font-bold tracking-tight text-[#111111]">
-            PropFlow<span className="text-[#FF5C1C]">.</span>
+            PropIQ<span className="text-[#FF5C1C]">.</span>
           </span>
         </Link>
 
@@ -82,7 +82,7 @@ export default function LoginPage() {
           {/* Card Header */}
           <div className="space-y-2 mb-8 text-center">
             <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight text-[#111111]">
-              Sign in to PropFlow
+              Sign in to PropIQ
             </h1>
             <p className="text-sm text-[#7A7A7A] font-sans leading-relaxed">
               Access your real estate CRM dashboard and AI workspace
@@ -168,7 +168,7 @@ export default function LoginPage() {
             {/* Legal / Policy Note */}
             <div className="pt-2 text-center">
               <p className="text-[12px] text-[#7A7A7A] leading-relaxed">
-                By continuing, you agree to PropFlow&apos;s{" "}
+                By continuing, you agree to PropIQ&apos;s{" "}
                 <a
                   href="#"
                   className="text-[#111111] hover:text-[#FF5C1C] underline underline-offset-2 transition-colors"
@@ -190,7 +190,7 @@ export default function LoginPage() {
 
           {/* Switcher: New user link */}
           <div className="mt-8 pt-6 border-t border-[#EAE3D8] flex items-center justify-between text-xs text-[#7A7A7A] font-sans">
-            <span>New to PropFlow?</span>
+            <span>New to PropIQ?</span>
             <Link
               href="/"
               className="inline-flex items-center gap-1.5 text-[#FF5C1C] hover:text-[#E04809] font-bold transition-colors group focus-visible:outline-none focus-visible:underline"
@@ -213,7 +213,7 @@ export default function LoginPage() {
       {/* Bottom Footer */}
       <footer className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[#7A7A7A] gap-2 border-t border-[#EAE3D8] font-sans">
         <div>
-          © {new Date().getFullYear()} PropFlow Inc. All rights reserved.
+          © {new Date().getFullYear()} PropIQ Inc. All rights reserved.
         </div>
         <div className="flex items-center gap-4 text-[#7A7A7A]">
           <Link href="/" className="hover:text-[#FF5C1C] transition-colors">Home</Link>

@@ -1,4 +1,4 @@
-// Prisma Schema Additions for PropFlow Operating System & CRM
+// Prisma Schema Additions for PropIQ Operating System & CRM
 
 enum LeadIntent {
   HIGH

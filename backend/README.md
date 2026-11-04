@@ -1,6 +1,6 @@
-# ⚙️ PropFlow Backend Architecture & Services
+# ⚙️ PropIQ Backend Architecture & Services
 
-This directory contains the specifications, API architecture, and microservices for the **PropFlow Real Estate Operating System**.
+This directory contains the specifications, API architecture, and microservices for the **PropIQ Real Estate Operating System**.
 
 ---
 

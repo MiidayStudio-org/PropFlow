@@ -39,7 +39,7 @@ export function ProblemSolutionSection() {
           </h2>
 
           <p className="mt-6 text-[#7A7A7A] font-sans text-base sm:text-lg max-w-2xl mx-auto">
-            PropFlow replaces unorganized manual chaos with an automated Playwright real estate scraper and an AI-driven CRM command center.
+            PropIQ replaces unorganized manual chaos with an automated Playwright real estate scraper and an AI-driven CRM command center.
           </p>
         </div>
 
@@ -79,7 +79,7 @@ export function ProblemSolutionSection() {
             </div>
           </Reveal>
 
-          {/* PropFlow Automated Engine - Slides in from right */}
+          {/* PropIQ Automated Engine - Slides in from right */}
           <Reveal direction="right" duration={0.65}>
             <div className="rounded-3xl bg-[#FDEEE6] border border-[#FF5C1C]/25 p-7 sm:p-9 shadow-sm h-full">
               <div className="flex items-center gap-3.5 mb-6">
@@ -87,7 +87,7 @@ export function ProblemSolutionSection() {
                   ✓
                 </div>
                 <div>
-                  <h3 className="text-xl font-serif font-bold text-[#111111]">PropFlow Automated Engine</h3>
+                  <h3 className="text-xl font-serif font-bold text-[#111111]">PropIQ Automated Engine</h3>
                   <p className="text-xs text-[#FF5C1C] font-sans font-semibold">Playwright Scraper + AI Telemetry</p>
                 </div>
               </div>

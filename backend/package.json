@@ -1,13 +1,13 @@
 {
-  "name": "propflow-backend",
+  "name": "PropIQ-backend",
   "version": "1.0.0",
-  "description": "PropFlow Real Estate Operating System",
-  "main": "dist/index.js",
+  "description": "PropIQ Real Estate Operating System",
+  "main": "dist/src/index.js",
   "scripts": {
     "scrape:maharashtra": "tsx scripts/scrape-maharashtra.ts",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/src/index.js",
     "scrape": "ts-node src/scripts/runScraper.ts",
     "test": "ts-node src/services/scraper/__tests__/runTests.ts",
     "db:push": "prisma db push",
@@ -17,10 +17,10 @@
     "real-estate",
     "scraper",
     "playwright",
-    "propflow",
+    "PropIQ",
     "prisma"
   ],
-  "author": "PropFlow Engineering",
+  "author": "PropIQ Engineering",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.19.1",

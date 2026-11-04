@@ -1,6 +1,6 @@
-# 💻 PropFlow Frontend Application
+# 💻 PropIQ Frontend Application
 
-This directory contains the user interface and client application for **PropFlow**, built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, and **Tailwind CSS v4**.
+This directory contains the user interface and client application for **PropIQ**, built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, and **Tailwind CSS v4**.
 
 ---
 
@@ -43,9 +43,9 @@ frontend/
 
 ### 2. Authentication (`app/login/page.tsx`)
 - Multi-role demo account autofill:
-  - Principal Broker (`broker@propflow.ai`)
-  - Senior Agent (`agent@propflow.ai`)
-  - Builder Partner (`builder@propflow.ai`)
+  - Principal Broker (`broker@PropIQ.ai`)
+  - Senior Agent (`agent@PropIQ.ai`)
+  - Builder Partner (`builder@PropIQ.ai`)
 - Show/hide password toggle and "Remember Me" preference.
 
 ### 3. CRM Operations Dashboard (`app/dashboard/page.tsx`)

@@ -1,16 +1,16 @@
-import { PropertyDatabaseService, PropFlowScraperService } from '../services/scraper';
+import { PropertyDatabaseService, PropIQScraperService } from '../services/scraper';
 
 async function main() {
   const args = process.argv.slice(2);
   const isMock = args.includes('--mock') || args.length === 0;
 
   console.log('====================================================');
-  console.log('  🏢 PropFlow Real Estate Automated Scraper Service  ');
+  console.log('  🏢 PropIQ Real Estate Automated Scraper Service  ');
   console.log('====================================================\n');
 
   if (isMock) {
     console.log('[Runner Mode] Running with mock portal real estate listings feed...\n');
-    const mockProps = PropFlowScraperService.generateMockScrapedProperties();
+    const mockProps = PropIQScraperService.generateMockScrapedProperties();
 
     console.log(`Extracted ${mockProps.length} property listings:`);
     mockProps.forEach((p, idx) => {
@@ -61,7 +61,7 @@ async function main() {
     }
 
     console.log(`Scraping target URL: ${targetUrl}`);
-    const result = await PropFlowScraperService.runScrapeJob(targetUrl, {
+    const result = await PropIQScraperService.runScrapeJob(targetUrl, {
       headless,
       maxListings,
       saveToDb: true,

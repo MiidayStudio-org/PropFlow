@@ -10,7 +10,7 @@ export class PropertyDatabaseService {
    * Keyed on `externalId` and `sourceUrl`.
    */
   static async upsertScrapedProperty(property: ScrapedProperty): Promise<{ success: boolean; isNew: boolean; error?: string }> {
-    const hasDbUrl = Boolean(process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost:5432/propflow_db'));
+    const hasDbUrl = Boolean(process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost:5432/PropIQ_db'));
     try {
       if (!hasDbUrl) {
         throw new Error('DATABASE_URL not configured for live PostgreSQL');
@@ -125,7 +125,7 @@ export class PropertyDatabaseService {
    * Retrieve stored properties from DB or fallback memory
    */
   static async getAllProperties(): Promise<ScrapedProperty[]> {
-    const hasDbUrl = Boolean(process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost:5432/propflow_db'));
+    const hasDbUrl = Boolean(process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost:5432/PropIQ_db'));
     try {
       if (!hasDbUrl) throw new Error('No DB');
       const dbProps = await prisma.property.findMany();

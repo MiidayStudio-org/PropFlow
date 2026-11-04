@@ -14,7 +14,7 @@ const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:3000";
 // Enable CORS & Middleware
 app.use(
   cors({
-    origin: [FRONTEND_ORIGIN, "http://localhost:3000", "*"],
+    origin: [FRONTEND_ORIGIN, FRONTEND_ORIGIN.replace(/\/+$/, ""), "http://localhost:3000", "*"],
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   })
@@ -29,7 +29,7 @@ app.get("/api/health", (req: Request, res: Response) => {
   res.json({
     status: "ok",
     timestamp: new Date().toISOString(),
-    service: "PropFlow Real Estate Operating System API",
+    service: "PropIQ Real Estate Operating System API",
   });
 });
 
@@ -52,7 +52,7 @@ if (process.env.ENABLE_SCRAPE_CRON === "true") {
 // Start Express Server
 app.listen(PORT, () => {
   console.log("==================================================");
-  console.log(`🚀 PropFlow Backend API server running on port ${PORT}`);
+  console.log(`🚀 PropIQ Backend API server running on port ${PORT}`);
   console.log(`🌐 Health endpoint: http://localhost:${PORT}/api/health`);
   console.log(`📊 Stats endpoint:  http://localhost:${PORT}/api/stats`);
   console.log(`🏢 Properties API:  http://localhost:${PORT}/api/properties`);

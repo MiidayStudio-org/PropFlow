@@ -1,4 +1,4 @@
-// Prisma Schema for PropFlow Backend & Real Estate Scraper
+// Prisma Schema for PropIQ Backend & Real Estate Scraper
 
 generator client {
   provider = "prisma-client-js"

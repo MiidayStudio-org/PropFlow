@@ -68,7 +68,7 @@ export function TelemetrySection() {
               </p>
             </div>
             <div className="bg-[#121212] p-4 rounded-2xl border border-white/5 text-xs font-mono text-gray-400">
-              <span className="text-[#FF5C1C]">&gt;</span> PropFlowScraperService.runScrapeJob(portalUrl)<br />
+              <span className="text-[#FF5C1C]">&gt;</span> PropIQScraperService.runScrapeJob(portalUrl)<br />
               <span className="text-green-400">✓ Extracted:</span> 2 BHK Luxury Flat (Dombivli East)<br />
               <span className="text-green-400">✓ Price Parsed:</span> ₹65,00,000 INR<br />
               <span className="text-green-400">✓ DB Status:</span> Upserted (100% Deduplicated)

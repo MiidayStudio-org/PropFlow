@@ -44,7 +44,7 @@ export function AIIntelligenceSection() {
           </h2>
 
           <p className="mt-6 text-[#7A7A7A] font-sans text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            PropFlow automatically parses scraped property parameters, scores buyer intent vectors, and recommends high-yield matches instantly.
+            PropIQ automatically parses scraped property parameters, scores buyer intent vectors, and recommends high-yield matches instantly.
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export function AIIntelligenceSection() {
                 <Sparkles size={20} />
               </div>
               <div>
-                <h3 className="font-serif font-bold text-[#111111] text-lg">PropFlow MatchScore™ Simulator</h3>
+                <h3 className="font-serif font-bold text-[#111111] text-lg">PropIQ MatchScore™ Simulator</h3>
                 <p className="text-xs text-[#7A7A7A] font-sans">Real-Time Scraped Inventory & Buyer Vector Scoring</p>
               </div>
             </div>

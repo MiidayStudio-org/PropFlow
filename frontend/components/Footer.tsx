@@ -33,9 +33,9 @@ export function Footer() {
           <div className="md:col-span-2">
             <ScaleIn duration={0.5}>
               <a href="#" className="flex items-center gap-3 mb-4">
-                <img src="/logo.svg" alt="PropFlow Logo" className="w-9 h-9 rounded-xl shadow-sm" />
+                <img src="/logo.svg" alt="PropIQ Logo" className="w-9 h-9 rounded-xl shadow-sm" />
                 <span className="text-2xl font-serif font-bold text-white tracking-tight">
-                  PropFlow<span className="text-[#FF5C1C]">.</span>
+                  PropIQ<span className="text-[#FF5C1C]">.</span>
                 </span>
               </a>
             </ScaleIn>
@@ -90,7 +90,7 @@ export function Footer() {
 
         {/* Footer Bottom */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-          <p>© {new Date().getFullYear()} PropFlow Technologies Inc. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} PropIQ Technologies Inc. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <a href="#" className="hover:text-white transition-colors">Twitter</a>
             <a href="#" className="hover:text-white transition-colors">LinkedIn</a>

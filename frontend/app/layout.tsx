@@ -24,11 +24,11 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "PropFlow — AI-Powered Real Estate Intelligence & Scraper Platform",
+  title: "PropIQ — AI-Powered Real Estate Intelligence & Scraper Platform",
   description:
     "A modern real estate intelligence platform combining automated property portal scraping, predictive analytics, pipeline CRM, and automated property matching.",
   keywords: [
-    "PropFlow",
+    "PropIQ",
     "Real Estate Scraper",
     "Real Estate CRM",
     "AI Real Estate Intelligence",
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
     "Property Matching AI",
     "Broker CRM",
   ],
-  authors: [{ name: "PropFlow Team" }],
-  creator: "PropFlow",
+  authors: [{ name: "PropIQ Team" }],
+  creator: "PropIQ",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

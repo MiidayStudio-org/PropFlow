@@ -1,6 +1,6 @@
 import { PropertyDataCleaner } from '../cleaner';
 import { PropertyDatabaseService } from '../dbService';
-import { PropFlowScraperService } from '../index';
+import { PropIQScraperService } from '../index';
 import { ScrapedProperty } from '../types';
 
 function assertEqual(actual: any, expected: any, message: string) {
@@ -11,7 +11,7 @@ function assertEqual(actual: any, expected: any, message: string) {
 }
 
 async function runTests() {
-  console.log('🧪 Running PropFlow Real Estate Scraper Unit & Integration Tests...\n');
+  console.log('🧪 Running PropIQ Real Estate Scraper Unit & Integration Tests...\n');
 
   // --- Test 1: Price Parsing ---
   console.log('--- Test Suite 1: Currency & Price Parsing ---');
@@ -55,7 +55,7 @@ async function runTests() {
 
   // --- Test 6: Database Upsert & Deduplication ---
   console.log('\n--- Test Suite 6: Database Upsert & Duplicate Prevention ---');
-  const mockProps = PropFlowScraperService.generateMockScrapedProperties();
+  const mockProps = PropIQScraperService.generateMockScrapedProperties();
   const testProp: ScrapedProperty = mockProps[0];
 
   const firstUpsert = await PropertyDatabaseService.upsertScrapedProperty(testProp);

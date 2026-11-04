@@ -345,7 +345,7 @@ async function scrapeTargetUrl(target: TargetTarget): Promise<PropertyListing[]>
 // ==========================================
 export async function runMaharashtraScraper() {
   console.log("==================================================");
-  console.log("🚀 Starting PropFlow Maharashtra Property Scraper");
+  console.log("🚀 Starting PropIQ Maharashtra Property Scraper");
   console.log("==================================================");
 
   const allListings: PropertyListing[] = [];

@@ -15,7 +15,7 @@ export function ValuePropSection() {
       tag: '01 / ARCHITECTURE',
     },
     {
-      title: 'PropFlow MatchScore™ Engine',
+      title: 'PropIQ MatchScore™ Engine',
       subtitle: 'PREDICTIVE AI MATCHING',
       description:
         'Our vector-based neural algorithm analyzes buyer budget tolerance, commute radii, BHK specifications, and lifestyle preferences in real-time.',
@@ -83,7 +83,7 @@ export function ValuePropSection() {
               </div>
 
               <div className="pt-6 mt-6 border-t border-[#EAE5DE]/80 flex items-center justify-between">
-                <span className="text-xs font-semibold text-[#121212]">PropFlow Advantage</span>
+                <span className="text-xs font-semibold text-[#121212]">PropIQ Advantage</span>
                 <span className="w-8 h-8 rounded-full bg-[#FDEEE6] text-[#FF5C1C] flex items-center justify-center text-sm font-bold">
                   &rarr;
                 </span>

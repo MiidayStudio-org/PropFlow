@@ -12,7 +12,7 @@ export * from './scrapers/portalScraper';
 export * from './stealthBrowser';
 export * from './types';
 
-export class PropFlowScraperService {
+export class PropIQScraperService {
   /**
    * Run full end-to-end real estate scraping job:
    * 1. Launches Playwright with stealth evasions
@@ -29,26 +29,26 @@ export class PropFlowScraperService {
     const scraper: BaseScraper = new PortalRealEstateScraper(options);
 
     try {
-      console.log(`[PropFlow Scraper] Starting job for URL: ${targetUrl}`);
+      console.log(`[PropIQ Scraper] Starting job for URL: ${targetUrl}`);
       await scraper.init();
       properties = await scraper.scrape(targetUrl);
 
-      console.log(`[PropFlow Scraper] Extracted ${properties.length} listings from portal.`);
+      console.log(`[PropIQ Scraper] Extracted ${properties.length} listings from portal.`);
 
       // Clean and normalize each listing guaranteed against ScrapedProperty contract
-      properties = properties.map((prop) => PropFlowScraperService.normalizeListing(prop));
+      properties = properties.map((prop) => PropIQScraperService.normalizeListing(prop));
 
       if (options.saveToDb !== false && properties.length > 0) {
-        console.log(`[PropFlow Scraper] Upserting properties to database...`);
+        console.log(`[PropIQ Scraper] Upserting properties to database...`);
         const dbResult = await PropertyDatabaseService.bulkUpsertScrapedProperties(properties);
         savedToDbCount = dbResult.saved;
         if (dbResult.errors.length > 0) {
           errors.push(...dbResult.errors);
         }
-        console.log(`[PropFlow Scraper] Successfully upserted ${savedToDbCount} listings (${dbResult.newCount} new, ${dbResult.updatedCount} updated).`);
+        console.log(`[PropIQ Scraper] Successfully upserted ${savedToDbCount} listings (${dbResult.newCount} new, ${dbResult.updatedCount} updated).`);
       }
     } catch (err: any) {
-      const errMsg = `[PropFlow Scraper Error] ${err.message || err}`;
+      const errMsg = `[PropIQ Scraper Error] ${err.message || err}`;
       console.error(errMsg);
       errors.push(errMsg);
     } finally {

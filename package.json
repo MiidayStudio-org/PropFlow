@@ -7,11 +7,13 @@
     "dev": "npm run dev --prefix frontend",
     "dev:frontend": "npm run dev --prefix frontend",
     "dev:backend": "npm run dev --prefix backend",
-    "build": "npm run build --prefix frontend && npm run build --prefix backend",
+    "build": "npm run build --prefix frontend",
     "build:frontend": "npm run build --prefix frontend",
     "build:backend": "npm run build --prefix backend",
+    "start": "npm start --prefix frontend",
     "start:frontend": "npm start --prefix frontend",
     "start:backend": "npm start --prefix backend",
-    "install:all": "npm install --prefix frontend && npm install --prefix backend"
+    "install:all": "npm install --prefix frontend && npm install --prefix backend",
+    "postinstall": "npm install --prefix frontend"
   }
 }

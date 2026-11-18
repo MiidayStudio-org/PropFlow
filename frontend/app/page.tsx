@@ -2,14 +2,14 @@ import React from "react";
 import { Navbar } from "../components/Navbar";
 import { Hero } from "../components/Hero";
 import { ProblemSolutionSection } from "../components/ProblemSolutionSection";
-import { AIIntelligenceSection } from "../components/AIIntelligenceSection";
+import { ScraperEngineSection } from "../components/ScraperEngineSection";
 import { WorkflowSection } from "../components/WorkflowSection";
 import { FinalCTASection } from "../components/FinalCTASection";
 import { Footer } from "../components/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#111111] font-sans selection:bg-[#FF5C1C] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#FFFFFF] text-[#111111] font-sans selection:bg-[#F5C238] selection:text-black">
       {/* 1. Header Navigation */}
       <Navbar />
 
@@ -20,8 +20,8 @@ export default function Home() {
         {/* 3. Problem vs Solution Section */}
         <ProblemSolutionSection />
 
-        {/* 4. AI Intelligence Section */}
-        <AIIntelligenceSection />
+        {/* 4. Scraper Engine Section */}
+        <ScraperEngineSection />
 
         {/* 5. Workflow Section */}
         <WorkflowSection />

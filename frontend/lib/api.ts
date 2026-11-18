@@ -29,6 +29,25 @@ export function cleanPhoneForWhatsApp(phone: string): string {
 // ==========================================
 // TYPES
 // ==========================================
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  avatar?: string;
+}
+
+export interface AuthAgency {
+  id: string;
+  name: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  user: AuthUser;
+  agency: AuthAgency;
+}
+
 export interface StatsData {
   activePipeline: number;
   totalClosedGmv: number;
@@ -103,14 +122,20 @@ export interface SiteVisitItem {
 
 export interface DealItem {
   id: string;
+  leadId: string;
   leadName: string;
+  propertyId?: string | null;
   propertyTitle: string;
   buyerBid: string;
+  numericBuyerBid?: number;
   builderCounter: string;
+  numericBuilderCounter?: number;
   agreedPrice: string;
+  numericAgreedPrice?: number | null;
   commission: string;
   stage: "Offer Placed" | "In Negotiation" | "Token Received" | "Closed Deal";
   rawStage: string;
+  broker?: string;
 }
 
 export interface TeamMemberItem {
@@ -182,14 +207,74 @@ export interface MatchScoreResult {
   property: PropertyItem;
 }
 
+export interface AiQueryResult {
+  query: string;
+  detectedParameters: {
+    bhk: string | null;
+    locality?: string;
+    maxBudget?: number | null;
+  };
+  totalMatches: number;
+  summary: string;
+  leads: Array<{
+    leadId: string;
+    name: string;
+    phone: string;
+    email?: string;
+    bhk: string;
+    location: string;
+    budget: string;
+    relevanceScore: number;
+    matchScore: number;
+    matchedProperty: string;
+    matchedPropertyId?: string;
+    status: string;
+    agent: string;
+    suggestedAction: string;
+  }>;
+}
+
+export interface ScraperStatusData {
+  status: string;
+  totalProperties: number;
+  lastScrapedAt: string | null;
+  portalCounts: Record<string, number>;
+}
+
+// ==========================================
+// AUTHENTICATION UTILITIES
+// ==========================================
+export function getStoredToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("propflow_token");
+}
+
+export function setStoredToken(token: string) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem("propflow_token", token);
+  // Also store in cookie for Next.js route protection middleware
+  document.cookie = `propflow_token=${token}; path=/; max-age=604800; SameSite=Lax`;
+}
+
+export function clearStoredToken() {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem("propflow_token");
+  localStorage.removeItem("propflow_user");
+  document.cookie = "propflow_token=; path=/; max-age=0; SameSite=Lax";
+}
+
 // ==========================================
 // API FETCH CLIENT FUNCTIONS
 // ==========================================
 async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
+  const token = getStoredToken();
+  const authHeaders: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
+
   const res = await fetch(`${API_BASE}${endpoint}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
+      ...authHeaders,
       ...(options?.headers || {}),
     },
     cache: "no-store",
@@ -200,6 +285,7 @@ async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> 
     try {
       const json = await res.json();
       if (json.error) errorMsg = json.error;
+      else if (json.message) errorMsg = json.message;
     } catch {}
     throw new Error(errorMsg);
   }
@@ -207,6 +293,64 @@ async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> 
   return res.json();
 }
 
+// Auth API Calls
+export async function loginUser(email: string, password: string): Promise<AuthResponse> {
+  const res = await apiFetch<AuthResponse>("/api/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+  setStoredToken(res.token);
+  if (typeof window !== "undefined") {
+    localStorage.setItem("propflow_user", JSON.stringify(res.user));
+  }
+  return res;
+}
+
+export async function loginWithGoogle(credential?: string, accessToken?: string): Promise<AuthResponse> {
+  const res = await apiFetch<AuthResponse>("/api/auth/google", {
+    method: "POST",
+    body: JSON.stringify({ credential, accessToken }),
+  });
+  setStoredToken(res.token);
+  if (typeof window !== "undefined") {
+    localStorage.setItem("propflow_user", JSON.stringify(res.user));
+    if (res.agency) {
+      localStorage.setItem("propflow_agency", JSON.stringify(res.agency));
+    }
+  }
+  return res;
+}
+
+export async function registerUser(data: {
+  agencyName: string;
+  name: string;
+  email: string;
+  password: string;
+  role?: string;
+}): Promise<AuthResponse> {
+  const res = await apiFetch<AuthResponse>("/api/auth/register", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  setStoredToken(res.token);
+  if (typeof window !== "undefined") {
+    localStorage.setItem("propflow_user", JSON.stringify(res.user));
+  }
+  return res;
+}
+
+export async function fetchCurrentUser(): Promise<{ user: AuthUser; agency: AuthAgency }> {
+  return apiFetch<{ user: AuthUser; agency: AuthAgency }>("/api/auth/me");
+}
+
+export function logoutUser() {
+  clearStoredToken();
+  if (typeof window !== "undefined") {
+    window.location.href = "/login";
+  }
+}
+
+// Data API Calls
 export async function fetchStats(): Promise<StatsData> {
   return apiFetch<StatsData>("/api/stats");
 }
@@ -260,6 +404,30 @@ export async function fetchBrokers(): Promise<TeamMemberItem[]> {
   return apiFetch<TeamMemberItem[]>("/api/brokers");
 }
 
+export async function fetchScraperStatus(): Promise<ScraperStatusData> {
+  return apiFetch<ScraperStatusData>("/api/scraper/status");
+}
+
+export async function triggerScraper(): Promise<{ success: boolean; status: string; message: string }> {
+  return apiFetch<{ success: boolean; status: string; message: string }>("/api/scraper/trigger", {
+    method: "POST",
+  });
+}
+
+export async function runAiQuery(query: string): Promise<AiQueryResult> {
+  return apiFetch<AiQueryResult>("/api/ai/query", {
+    method: "POST",
+    body: JSON.stringify({ query }),
+  });
+}
+
+export async function subscribeNewsletter(email: string): Promise<{ success: boolean; message: string }> {
+  return apiFetch<{ success: boolean; message: string }>("/api/newsletter/subscribe", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+}
+
 // Mutations
 export async function createLead(data: {
   name: string;
@@ -286,12 +454,84 @@ export async function updateLead(id: string, data: Partial<LeadItem>): Promise<L
   });
 }
 
+export async function deleteLead(id: string): Promise<{ success: boolean }> {
+  return apiFetch<{ success: boolean }>(`/api/leads/${id}`, {
+    method: "DELETE",
+  });
+}
+
+export async function createProperty(data: {
+  title: string;
+  description?: string;
+  propertyType?: string;
+  listingType?: string;
+  price: number;
+  carpetAreaSqFt?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  furnishingStatus?: string;
+  address: string;
+  locality: string;
+  city: string;
+  amenities?: string[];
+  images?: string[];
+}): Promise<PropertyItem> {
+  return apiFetch<PropertyItem>("/api/properties", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateProperty(id: string, data: Partial<PropertyItem>): Promise<PropertyItem> {
+  return apiFetch<PropertyItem>(`/api/properties/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteProperty(id: string): Promise<{ success: boolean }> {
+  return apiFetch<{ success: boolean }>(`/api/properties/${id}`, {
+    method: "DELETE",
+  });
+}
+
+export async function createDeal(data: {
+  title?: string;
+  leadId: string;
+  propertyId?: string | null;
+  brokerId?: string | null;
+  buyerBid: number;
+  builderAsk: number;
+  agreedPrice?: number | null;
+  brokeragePct?: number;
+  stage?: string;
+}): Promise<DealItem> {
+  return apiFetch<DealItem>("/api/deals", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateDeal(id: string, data: Partial<DealItem>): Promise<DealItem> {
+  return apiFetch<DealItem>(`/api/deals/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteDeal(id: string): Promise<{ success: boolean }> {
+  return apiFetch<{ success: boolean }>(`/api/deals/${id}`, {
+    method: "DELETE",
+  });
+}
+
 export async function createSiteVisit(data: {
   leadId: string;
   propertyId?: string | null;
   scheduledAt: string;
   agentName?: string;
   notes?: string;
+  status?: string;
 }): Promise<SiteVisitItem> {
   return apiFetch<SiteVisitItem>("/api/site-visits", {
     method: "POST",
@@ -306,6 +546,12 @@ export async function updateSiteVisit(id: string, data: Partial<SiteVisitItem>):
   });
 }
 
+export async function deleteSiteVisit(id: string): Promise<{ success: boolean }> {
+  return apiFetch<{ success: boolean }>(`/api/site-visits/${id}`, {
+    method: "DELETE",
+  });
+}
+
 export async function createBroker(data: {
   name: string;
   email: string;
@@ -316,6 +562,19 @@ export async function createBroker(data: {
   return apiFetch<TeamMemberItem>("/api/brokers", {
     method: "POST",
     body: JSON.stringify(data),
+  });
+}
+
+export async function updateBroker(id: string, data: Partial<TeamMemberItem>): Promise<TeamMemberItem> {
+  return apiFetch<TeamMemberItem>(`/api/brokers/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteBroker(id: string): Promise<{ success: boolean }> {
+  return apiFetch<{ success: boolean }>(`/api/brokers/${id}`, {
+    method: "DELETE",
   });
 }
 
@@ -435,59 +694,6 @@ export function useProperties(params?: {
   return { properties, total, loading, error, reload };
 }
 
-export function useFeaturedProperties() {
-  const [featured, setFeatured] = useState<PropertyItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const reload = useCallback(async () => {
-    try {
-      const res = await fetchFeaturedProperties();
-      setFeatured(res);
-      setError(null);
-    } catch (e: any) {
-      setError(e.message || "Failed to load featured properties");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    reload();
-  }, [reload]);
-
-  return { featured, loading, error, reload };
-}
-
-export function useMatches(leadId?: string | null) {
-  const [matches, setMatches] = useState<MatchScoreResult[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const reload = useCallback(async () => {
-    if (!leadId) {
-      setMatches([]);
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await fetchLeadMatches(leadId);
-      setMatches(res);
-      setError(null);
-    } catch (e: any) {
-      setError(e.message || "Failed to load matches");
-    } finally {
-      setLoading(false);
-    }
-  }, [leadId]);
-
-  useEffect(() => {
-    reload();
-  }, [reload]);
-
-  return { matches, loading, error, reload };
-}
-
 export function useSiteVisits() {
   const [visits, setVisits] = useState<SiteVisitItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -550,7 +756,7 @@ export function useBrokers() {
       setBrokers(res);
       setError(null);
     } catch (e: any) {
-      setError(e.message || "Failed to load brokers");
+      setError(e.message || "Failed to load team");
     } finally {
       setLoading(false);
     }
@@ -561,4 +767,57 @@ export function useBrokers() {
   }, [reload]);
 
   return { brokers, loading, error, reload };
+}
+
+export function useScraperStatus() {
+  const [status, setStatus] = useState<ScraperStatusData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const reload = useCallback(async () => {
+    try {
+      const res = await fetchScraperStatus();
+      setStatus(res);
+    } catch {
+      // Graceful
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    reload();
+  }, [reload]);
+
+  return { status, loading, reload };
+}
+
+export function useMatches(leadId: string | null) {
+  const [matches, setMatches] = useState<MatchScoreResult[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const reload = useCallback(async () => {
+    if (!leadId) {
+      setMatches([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetchLeadMatches(leadId);
+      setMatches(res || []);
+      setError(null);
+    } catch (err: any) {
+      setMatches([]);
+      setError(err.message || "Failed to fetch matches");
+    } finally {
+      setLoading(false);
+    }
+  }, [leadId]);
+
+  useEffect(() => {
+    reload();
+  }, [reload]);
+
+  return { matches, loading, error, reload };
 }

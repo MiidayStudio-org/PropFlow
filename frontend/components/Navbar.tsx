@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Menu, X } from "./icons";
+import { Logo } from "./Logo";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,85 +20,79 @@ export function Navbar() {
 
   return (
     <motion.header
-      initial={{ y: shouldReduceMotion ? 0 : -50, opacity: shouldReduceMotion ? 1 : 0 }}
+      initial={{ y: shouldReduceMotion ? 0 : -15, opacity: shouldReduceMotion ? 1 : 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#111111]/95 backdrop-blur-md border-b border-[#262626] py-3.5 shadow-lg"
-          : "bg-[#111111] border-b border-[#262626]/60 py-4.5"
+          ? "bg-[#F4F5F7]/95 backdrop-blur-md border-b border-black/5 py-4 shadow-xs"
+          : "bg-transparent py-6"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
         <div className="flex items-center justify-between">
-          {/* Brand Logo with Door Arch Logo Asset */}
+          {/* Brand Logo: Clean Official PropFlow Squircle & Wordmark */}
           <a
-            href="#"
-            className="flex items-center gap-2.5 group focus-visible:outline-none"
-            aria-label="PropIQ Home"
+            href="/"
+            className="flex items-center group focus-visible:outline-none"
+            aria-label="PropFlow Home"
           >
-            <div className="relative w-9 h-9 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform">
-              <img
-                src="/logo.svg"
-                alt="PropIQ Logo"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <span className="text-xl font-bold tracking-tight text-white font-sans">
-              PropIQ
-            </span>
+            <Logo size="md" theme="dark" className="group-hover:opacity-95 transition-opacity" />
           </a>
 
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300" aria-label="Main Navigation">
+          {/* Navigation Links (Uppercase & Tracked) */}
+          <nav
+            className="hidden md:flex items-center gap-8 lg:gap-10 text-xs font-semibold tracking-widest"
+            aria-label="Main Navigation"
+          >
             <a
-              href="#"
-              className="py-1 text-white font-semibold hover:text-[#FF5C1C] transition-colors"
+              href="/"
+              className="text-[#111111] font-bold hover:text-black transition-colors"
             >
-              Home
+              HOME
+            </a>
+            <a
+              href="#problem-solution"
+              className="text-[#333333] hover:text-black transition-colors"
+            >
+              SOLUTIONS
             </a>
             <a
               href="#scraper-service"
-              className="py-1 hover:text-[#FF5C1C] transition-colors"
+              className="text-[#333333] hover:text-black transition-colors"
             >
-              Scraper Engine
-            </a>
-            <a
-              href="#ai-intelligence"
-              className="py-1 hover:text-[#FF5C1C] transition-colors"
-            >
-              AI Matching
+              SCRAPER ENGINE
             </a>
             <a
               href="#workflow"
-              className="py-1 hover:text-[#FF5C1C] transition-colors"
+              className="text-[#333333] hover:text-black transition-colors"
             >
-              Workflow
+              WORKFLOW
             </a>
           </nav>
 
-          {/* Actions: LOGIN Pill Button */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Action: GET STARTED Outline Button */}
+          <div className="hidden md:flex items-center">
             <a
-              href="/login"
-              className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-[#FF5C1C] hover:bg-[#E04809] text-white text-sm font-semibold transition-all duration-200 shadow-sm hover:scale-[1.02]"
+              href="/dashboard"
+              className="inline-flex items-center justify-center px-4 py-2 rounded-xs border border-[#111111] text-[#111111] text-xs font-bold tracking-widest uppercase hover:bg-[#111111] hover:text-white transition-all duration-200"
             >
-              <span>Login</span>
+              GET STARTED
             </a>
           </div>
 
           {/* Mobile menu trigger */}
-          <div className="flex items-center md:hidden gap-2">
+          <div className="flex items-center md:hidden gap-3">
             <a
-              href="/login"
-              className="text-xs font-semibold bg-[#FF5C1C] text-white px-4 py-2 rounded-full shadow-sm"
+              href="/dashboard"
+              className="text-[11px] font-bold tracking-wider uppercase bg-[#111111] text-white px-3 py-1.5 rounded-xs"
             >
-              Login
+              GET STARTED
             </a>
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-lg text-slate-300 hover:text-white border border-[#262626]"
+              className="p-1.5 rounded text-neutral-800 hover:text-black border border-black/15"
               aria-label={isOpen ? "Close menu" : "Open menu"}
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -108,35 +103,35 @@ export function Navbar() {
 
       {/* Mobile menu drawer */}
       {isOpen && (
-        <div className="md:hidden border-b border-[#262626] bg-[#111111]/98 backdrop-blur-xl px-6 pt-4 pb-6 space-y-3">
-          <nav className="flex flex-col space-y-2.5 text-sm font-medium text-slate-300">
+        <div className="md:hidden border-b border-black/10 bg-[#F4F5F7]/98 backdrop-blur-xl px-6 pt-4 pb-6 space-y-3">
+          <nav className="flex flex-col space-y-2.5 text-xs font-bold tracking-widest text-[#333333]">
             <a
-              href="#"
+              href="/"
               onClick={() => setIsOpen(false)}
-              className="py-1.5 text-white font-semibold hover:text-[#FF5C1C]"
+              className="py-1.5 text-[#111111]"
             >
-              Home
+              HOME
+            </a>
+            <a
+              href="#problem-solution"
+              onClick={() => setIsOpen(false)}
+              className="py-1.5 hover:text-black"
+            >
+              SOLUTIONS
             </a>
             <a
               href="#scraper-service"
               onClick={() => setIsOpen(false)}
-              className="py-1.5 hover:text-[#FF5C1C]"
+              className="py-1.5 hover:text-black"
             >
-              Scraper Engine
-            </a>
-            <a
-              href="#ai-intelligence"
-              onClick={() => setIsOpen(false)}
-              className="py-1.5 hover:text-[#FF5C1C]"
-            >
-              AI Matching
+              SCRAPER ENGINE
             </a>
             <a
               href="#workflow"
               onClick={() => setIsOpen(false)}
-              className="py-1.5 hover:text-[#FF5C1C]"
+              className="py-1.5 hover:text-black"
             >
-              Workflow
+              WORKFLOW
             </a>
           </nav>
         </div>

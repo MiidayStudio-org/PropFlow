@@ -2,116 +2,148 @@
 
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { XCircle, CheckCircle2 } from "./icons";
-import { Reveal } from "./motion/primitives";
+import { Clock, Zap, Layers, Database, TrendingUp, Target } from "./icons";
+
+interface ComparisonCard {
+  problemIcon: React.ReactNode;
+  problemTitle: string;
+  problemDesc: string;
+  solutionIcon: React.ReactNode;
+  solutionTitle: string;
+  solutionDesc: string;
+}
 
 export function ProblemSolutionSection() {
   const shouldReduceMotion = useReducedMotion();
 
-  const problemPoints = [
-    { title: "Manual Portal Searching", desc: "Hours wasted manually browsing 99acres & Housing.com for listings." },
-    { title: "Duplicate Inventory", desc: "Scattered data leading to conflicting prices and double agent listings." },
-    { title: "Lost WhatsApp Buyers", desc: "High-intent buyer leads buried under unorganized WhatsApp chats." },
-    { title: "Untracked Site Visits", desc: "No-shows and lost commissions from missing follow-up reminders." },
-  ];
-
-  const solutionPoints = [
-    { title: "Playwright Stealth Scraper", desc: "Automated extraction with stealth evasions and currency/area normalization." },
-    { title: "Prisma Deduplication", desc: "Atomic database upserts keyed on external IDs to prevent duplicate rows." },
-    { title: "MatchScore™ Vector AI", desc: "Weighted algorithm pairing buyers to properties with 98.4% accuracy." },
-    { title: "Automated Logistics", desc: "WhatsApp location pins, calendar invites, and live deal state tracking." },
+  const cards: ComparisonCard[] = [
+    {
+      problemIcon: <Clock size={20} className="stroke-[2.2]" />,
+      problemTitle: "Manual & Time-Consuming",
+      problemDesc: "Finding and tracking properties takes hours.",
+      solutionIcon: <Zap size={20} className="stroke-[2.2] fill-black" />,
+      solutionTitle: "Automated Scraping",
+      solutionDesc: "Get fresh listings from multiple sources instantly.",
+    },
+    {
+      problemIcon: <Layers size={20} className="stroke-[2.2]" />,
+      problemTitle: "Scattered & Incomplete Data",
+      problemDesc: "Listings are spread across platforms with inconsistent information.",
+      solutionIcon: <Database size={20} className="stroke-[2.2]" />,
+      solutionTitle: "Unified Property Data",
+      solutionDesc: "Get clean, deduplicated, and structured data in one place.",
+    },
+    {
+      problemIcon: <TrendingUp size={20} className="stroke-[2.2]" />,
+      problemTitle: "Low Deal Conversion",
+      problemDesc: "Good leads often get missed due to lack of timely insights.",
+      solutionIcon: <Target size={20} className="stroke-[2.2]" />,
+      solutionTitle: "Higher Deal Success",
+      solutionDesc: "AI lead matching, deal insights, and a built-in CRM to close more deals.",
+    },
   ];
 
   return (
-    <section id="scraper-service" className="py-24 md:py-28 bg-[#FAF7F2] text-[#111111] border-b border-[#EAE3D8] scroll-mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#FDEEE6] border border-[#FF5C1C]/20 text-[#FF5C1C] text-xs font-semibold uppercase tracking-wider mb-4">
-            Problem vs. Solution
-          </span>
-          
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#111111] tracking-tight leading-tight">
-            Leads Are Everywhere. Properties Are Everywhere.<br />
-            <span className="relative inline-block z-10 mx-1">
-              <span className="absolute -top-3 -left-3 w-16 h-16 md:w-20 md:h-20 bg-[#FF5C1C] rounded-full -z-10 opacity-90" aria-hidden="true" />
-              <span className="relative z-10 text-[#111111]">But Your Business Shouldn't Be.</span>
+    <section
+      id="problem-solution"
+      className="py-20 sm:py-24 lg:py-28 bg-[#FFFFFF] text-[#111111] border-b border-[#EEEEEE] scroll-mt-20 select-none"
+    >
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto flex flex-col items-center">
+          {/* Top Tag: Yellow Bar + Problem vs Solution */}
+          <motion.div
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : -8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4 }}
+            className="inline-flex items-center gap-2 mb-4"
+          >
+            <span className="w-1.5 h-4 bg-[#F5C238] rounded-xs inline-block shrink-0" />
+            <span className="text-xs sm:text-[13px] font-bold text-[#111111] tracking-wide font-sans">
+              Problem vs Solution
             </span>
-          </h2>
+          </motion.div>
 
-          <p className="mt-6 text-[#7A7A7A] font-sans text-base sm:text-lg max-w-2xl mx-auto">
-            PropIQ replaces unorganized manual chaos with an automated Playwright real estate scraper and an AI-driven CRM command center.
-          </p>
+          {/* Heading with Yellow Accent Period Dot */}
+          <motion.h2
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, delay: 0.1 }}
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-black text-[#111111] tracking-[-0.03em] leading-[1.08] font-hero"
+            style={{
+              fontFamily: 'var(--font-inter), var(--font-sans), "Inter", "Plus Jakarta Sans", sans-serif',
+            }}
+          >
+            Real Estate Challenges,<br />
+            Solved with PropFlow
+            <span className="inline-block w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#F5C238] ml-2 align-baseline" />
+          </motion.h2>
+
+          {/* Subheading */}
+          <motion.p
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, delay: 0.15 }}
+            className="mt-4 sm:mt-5 text-[#666666] font-sans text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
+          >
+            From scattered data to closed deals, PropFlow removes the friction from modern real estate operations.
+          </motion.p>
         </div>
 
-        {/* 2-Column Comparison Cards with Deep rounded-3xl borders */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Old Manual Chaos - Slides in from left */}
-          <Reveal direction="left" duration={0.65}>
-            <div className="rounded-3xl bg-white border border-[#EAE3D8] p-7 sm:p-9 shadow-sm h-full">
-              <div className="flex items-center gap-3.5 mb-6">
-                <div className="w-10 h-10 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center font-bold">
-                  ✕
+        {/* 3 Problem vs Solution Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-7 mt-12 sm:mt-16">
+          {cards.map((card, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: idx * 0.1 }}
+              className="rounded-2xl sm:rounded-[22px] bg-white border border-[#EAEAEA] p-6 sm:p-7 shadow-[0_2px_16px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:border-[#D8D8D8] transition-all duration-300 flex flex-col justify-between"
+            >
+              {/* Problem Block */}
+              <div className="flex items-start gap-4">
+                <div className="w-11 h-11 rounded-xl bg-[#F4F5F7] text-[#111111] flex items-center justify-center shrink-0">
+                  {card.problemIcon}
                 </div>
-                <div>
-                  <h3 className="text-xl font-serif font-bold text-[#111111]">Unorganized Manual Chaos</h3>
-                  <p className="text-xs text-[#7A7A7A] font-sans">The traditional agency struggle</p>
-                </div>
-              </div>
-
-              <div className="space-y-4 font-sans">
-                {problemPoints.map((item, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: idx * 0.08 }}
-                    className="flex items-start gap-3.5 p-4 rounded-2xl bg-[#FAF7F2] border border-[#EAE3D8]/70"
-                  >
-                    <XCircle size={18} className="text-red-500 shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="text-sm font-semibold text-[#111111]">{item.title}</h4>
-                      <p className="text-xs text-[#7A7A7A] mt-0.5 leading-relaxed">{item.desc}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-
-          {/* PropIQ Automated Engine - Slides in from right */}
-          <Reveal direction="right" duration={0.65}>
-            <div className="rounded-3xl bg-[#FDEEE6] border border-[#FF5C1C]/25 p-7 sm:p-9 shadow-sm h-full">
-              <div className="flex items-center gap-3.5 mb-6">
-                <div className="w-10 h-10 rounded-2xl bg-[#FF5C1C] text-white flex items-center justify-center font-bold">
-                  ✓
-                </div>
-                <div>
-                  <h3 className="text-xl font-serif font-bold text-[#111111]">PropIQ Automated Engine</h3>
-                  <p className="text-xs text-[#FF5C1C] font-sans font-semibold">Playwright Scraper + AI Telemetry</p>
+                <div className="flex flex-col">
+                  <span className="text-xs text-[#888888] font-medium tracking-wide">
+                    Problem
+                  </span>
+                  <h3 className="text-[15px] sm:text-base font-bold text-[#111111] mt-0.5 leading-snug">
+                    {card.problemTitle}
+                  </h3>
+                  <p className="text-xs sm:text-[13px] text-[#666666] mt-1 leading-relaxed">
+                    {card.problemDesc}
+                  </p>
                 </div>
               </div>
 
-              <div className="space-y-4 font-sans">
-                {solutionPoints.map((item, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: idx * 0.08 }}
-                    className="flex items-start gap-3.5 p-4 rounded-2xl bg-white border border-[#FF5C1C]/20 shadow-xs"
-                  >
-                    <CheckCircle2 size={18} className="text-[#FF5C1C] shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="text-sm font-semibold text-[#111111]">{item.title}</h4>
-                      <p className="text-xs text-[#7A7A7A] mt-0.5 leading-relaxed">{item.desc}</p>
-                    </div>
-                  </motion.div>
-                ))}
+              {/* Thin Divider Line */}
+              <div className="w-full h-px bg-[#EDEDED] my-5 sm:my-6" />
+
+              {/* Solution Block */}
+              <div className="flex items-start gap-4">
+                <div className="w-11 h-11 rounded-xl bg-[#F5C238] text-black flex items-center justify-center shrink-0 shadow-xs">
+                  {card.solutionIcon}
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs text-[#888888] font-medium tracking-wide">
+                    Solution
+                  </span>
+                  <h3 className="text-[15px] sm:text-base font-bold text-[#111111] mt-0.5 leading-snug">
+                    {card.solutionTitle}
+                  </h3>
+                  <p className="text-xs sm:text-[13px] text-[#666666] mt-1 leading-relaxed">
+                    {card.solutionDesc}
+                  </p>
+                </div>
               </div>
-            </div>
-          </Reveal>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

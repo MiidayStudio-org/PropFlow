@@ -1,266 +1,172 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { Sparkles } from "./icons";
-import { PinnedSteps, StepData } from "./motion/primitives";
-import { useLeads } from "@/lib/api";
+import { Layers, Database, Sparkles, Handshake, ArrowRight, Play } from "./icons";
+import { DemoModal } from "./DemoModal";
 
-const BASE_STEPS: StepData[] = [
-  {
-    step: "01",
-    phase: "LEAD INGEST",
-    title: "High Intent Buyer",
-    tag: "HIGH INTENT BUYER",
-    tagColor: "bg-rose-950/40 text-rose-300 border-rose-800/40",
-    summary: "Inquired through portal with explicit criteria and verified loan eligibility.",
-    details: [
-      { label: "Budget Bracket", val: "$850K — $950K" },
-      { label: "Requirement", val: "2 BHK • Ready to move" },
-      { label: "Preferred Area", val: "Dombivli East (Station Access)" },
-      { label: "Timeline", val: "< 30 Days (Pre-Approved Loan)" },
-    ],
-    highlight: "Auto-enriched via WhatsApp Bot with zero manual spreadsheet entry.",
-  },
-  {
-    step: "02",
-    phase: "AI PROPERTY MATCH",
-    title: "94% Vector Match",
-    tag: "INSTANT RECOMMENDATION",
-    tagColor: "bg-emerald-950/40 text-emerald-300 border-emerald-800/40",
-    summary: "High-Rise Tower B, Unit 804 matched against 185 agency inventory listings.",
-    details: [
-      { label: "Matched Unit", val: "2 BHK Luxury Apt • 720 Carpet" },
-      { label: "Listing Price", val: "$890,000 (Within Budget)" },
-      { label: "Location", val: "Dombivli East (3 mins to station)" },
-      { label: "Key Fit", val: "West-facing balcony, covered car park" },
-    ],
-    highlight: "Matching algorithm scores 24 distinct client-property parameters.",
-  },
-  {
-    step: "03",
-    phase: "SITE VISIT",
-    title: "Visit Confirmed",
-    tag: "CALENDAR SYNCED",
-    tagColor: "bg-[#FDEEE6] text-[#FF5C1C] border-[#FF5C1C]/20",
-    summary: "Automated WhatsApp scheduling coordinated broker and buyer calendars.",
-    details: [
-      { label: "Scheduled Slot", val: "Sunday • 11:30 AM" },
-      { label: "Host Broker", val: "Vikram Sharma (Senior Associate)" },
-      { label: "Directions Sent", val: "Google Maps Pin sent on WhatsApp" },
-      { label: "Reminder", val: "Auto-reminder scheduled 2 hrs prior" },
-    ],
-    highlight: "Zero overlap with other broker appointments.",
-  },
-  {
-    step: "04",
-    phase: "AI FOLLOW-UP",
-    title: "Smart Follow-Up",
-    tag: "AUTOMATED DRAFTING",
-    tagColor: "bg-purple-950/40 text-purple-300 border-purple-800/40",
-    summary: "Post-visit feedback triggers customized cost sheet and floorplan delivery.",
-    details: [
-      { label: "Client Sentiment", val: "9/10 Positive on Layout & Sunlight" },
-      { label: "Client Concern", val: "Minor negotiation on floor rise charges" },
-      { label: "AI Action", val: 'Drafted: "Send customized cost-sheet & waiver pitch"' },
-      { label: "Channel", val: "1-Click WhatsApp Direct Send" },
-    ],
-    highlight: "Brokers close 3.8x faster when follow-ups are sent within 2 hours.",
-  },
-  {
-    step: "05",
-    phase: "NEGOTIATION",
-    title: "Counter-Offer Mapped",
-    tag: "DEAL PIPELINE",
-    tagColor: "bg-amber-950/40 text-amber-300 border-amber-800/40",
-    summary: "PropIQ tracks bidder vs builder spread and protects broker commission.",
-    details: [
-      { label: "Buyer Bid", val: "$870,000" },
-      { label: "Developer Counter", val: "$885,000 (Includes Stamp Duty)" },
-      { label: "Final Agreed", val: "$880,000" },
-      { label: "Brokerage", val: "2.0% ($17,600 fee secured)" },
-    ],
-    highlight: "Built-in margin guard ensures no unauthorized discounts.",
-  },
-  {
-    step: "06",
-    phase: "CLOSED",
-    title: "Deal Completed",
-    tag: "AGREEMENT REGISTERED",
-    tagColor: "bg-emerald-900/60 text-emerald-200 border-emerald-700/50",
-    summary: "Sale agreement executed, token received, and ledger updated.",
-    details: [
-      { label: "Unit Allocated", val: "Tower B, Unit 804" },
-      { label: "Deal Total", val: "$880,000" },
-      { label: "Commission", val: "$17,600 (Credited)" },
-      { label: "Client Status", val: "Auto-enrolled in Referral AI Loop" },
-    ],
-    highlight: "Cycle completed in 11 days (Industry average: 34 days).",
-  },
-];
+interface WorkflowStep {
+  step: string;
+  title: string;
+  desc: string;
+  icon: React.ReactNode;
+}
 
 export function WorkflowSection() {
-  const [activeStepIndex, setActiveStepIndex] = useState(1);
   const shouldReduceMotion = useReducedMotion();
-  const { leads } = useLeads();
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
 
-  const steps: StepData[] = BASE_STEPS.map((step, idx) => {
-    if (idx === 0 && leads.length > 0) {
-      const top = leads[0];
-      return {
-        ...step,
-        title: top.name,
-        details: [
-          { label: "Budget Bracket", val: top.budget },
-          { label: "Requirement", val: `${top.bhk} • Ready to move` },
-          { label: "Preferred Area", val: top.location },
-          { label: "Timeline", val: "< 30 Days (Pre-Approved Loan)" },
-        ],
-      };
-    }
-    return step;
-  });
-
-  const renderDetail = (activeStep: StepData, idx: number) => (
-    <div className="rounded-3xl bg-[#1B1B1B] border border-[#262626] p-6 sm:p-10 shadow-md text-left font-sans">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        {/* Left Context (Cols 1-7) */}
-        <div className="lg:col-span-7 space-y-6">
-          <div className="flex items-center gap-3.5">
-            <span className="text-3xl font-serif font-bold text-[#FF5C1C]">{activeStep.step}</span>
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                {activeStep.phase}
-              </span>
-              <h3 className="text-2xl font-serif font-bold text-white">{activeStep.title}</h3>
-            </div>
-            <span
-              className={`ml-auto hidden sm:inline-block px-3.5 py-1 rounded-full border text-xs font-bold ${activeStep.tagColor}`}
-            >
-              {activeStep.tag}
-            </span>
-          </div>
-
-          <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
-            {activeStep.summary}
-          </p>
-
-          {/* Data Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#111111] p-4 rounded-2xl border border-[#262626] text-xs">
-            {activeStep.details.map((d, i) => (
-              <div key={i} className="p-3 rounded-xl bg-[#1B1B1B] border border-[#262626]">
-                <div className="text-slate-400 text-[11px] mb-0.5">{d.label}</div>
-                <div className="text-white font-serif font-bold text-sm">{d.val}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* System Highlight */}
-          <div className="p-4 bg-[#FDEEE6] border border-[#FF5C1C]/25 rounded-2xl text-xs text-[#111111] flex items-center gap-2.5">
-            <Sparkles size={16} className="text-[#FF5C1C] flex-shrink-0" />
-            <span>
-              <strong className="text-[#FF5C1C]">SYSTEM HIGHLIGHT: </strong>
-              {activeStep.highlight}
-            </span>
-          </div>
-        </div>
-
-        {/* Right Visual Image (Cols 8-12) with Parallax / Scale */}
-        <div className="lg:col-span-5">
-          <div className="rounded-2xl bg-[#111111] border border-[#262626] p-4 shadow-sm space-y-4">
-            <div className="flex items-center justify-between text-xs border-b border-[#262626] pb-2.5">
-              <span className="text-slate-400 font-medium">Stage Snapshot</span>
-              <span className="text-[#FF5C1C] font-bold">Status: Active</span>
-            </div>
-
-            <motion.div
-              whileHover={{ scale: shouldReduceMotion ? 1 : 1.03 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="relative h-44 w-full rounded-xl overflow-hidden border border-[#262626]"
-            >
-              <Image
-                src="/images/light-villa.jpg"
-                alt="Workflow property asset"
-                fill
-                className="object-cover transition-transform duration-500 hover:scale-105"
-                sizes="400px"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#111111]/80 via-transparent to-transparent" />
-              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-white">
-                <span className="bg-[#111111]/90 text-white font-bold px-2.5 py-1 rounded-full border border-[#262626]">
-                  Tower B #804
-                </span>
-                <span className="bg-[#FF5C1C] text-white px-2.5 py-1 rounded-full font-bold">
-                  {activeStep.phase}
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Step navigation buttons */}
-            <div className="flex items-center justify-between pt-1 text-xs font-semibold">
-              <button
-                type="button"
-                disabled={activeStepIndex === 0}
-                onClick={() => setActiveStepIndex((prev) => Math.max(0, prev - 1))}
-                className="px-4 py-2 rounded-full bg-[#1B1B1B] text-slate-300 hover:bg-[#262626] disabled:opacity-30 border border-[#262626] cursor-pointer"
-              >
-                ← Previous
-              </button>
-
-              <span className="text-slate-400 font-mono">
-                {activeStepIndex + 1} of {steps.length}
-              </span>
-
-              <button
-                type="button"
-                disabled={activeStepIndex === steps.length - 1}
-                onClick={() =>
-                  setActiveStepIndex((prev) => Math.min(steps.length - 1, prev + 1))
-                }
-                className="px-5 py-2 rounded-full bg-[#FF5C1C] text-white hover:bg-[#E04809] disabled:opacity-30 shadow-xs cursor-pointer"
-              >
-                Next Step →
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  const steps: WorkflowStep[] = [
+    {
+      step: "01",
+      title: "Scrape",
+      desc: "Collect listings from multiple trusted sources.",
+      icon: <Layers size={22} className="stroke-[2.2] text-[#111111]" />,
+    },
+    {
+      step: "02",
+      title: "Enrich",
+      desc: "Clean, structure, and add key property details.",
+      icon: <Database size={22} className="stroke-[2.2] text-[#111111]" />,
+    },
+    {
+      step: "03",
+      title: "Match",
+      desc: "Use AI to find the right properties and leads.",
+      icon: <Sparkles size={22} className="stroke-[2.2] text-[#111111]" />,
+    },
+    {
+      step: "04",
+      title: "Convert",
+      desc: "Turn matched opportunities into real deals.",
+      icon: <Handshake size={22} className="stroke-[2.2] text-[#111111]" />,
+    },
+  ];
 
   return (
-    <section id="workflow" className="py-24 md:py-32 bg-[#111111] text-white border-t border-[#262626] scroll-mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Centered Pill Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FDEEE6] border border-[#FF5C1C]/20 text-xs font-semibold text-[#FF5C1C] mb-6 shadow-sm">
-          <span className="w-2 h-2 rounded-full bg-[#FF5C1C]" />
-          <span>04 // CRM Workflow</span>
+    <section
+      id="workflow"
+      className="py-20 sm:py-24 lg:py-28 bg-[#FFFFFF] text-[#111111] border-b border-[#EEEEEE] scroll-mt-20 select-none overflow-hidden"
+    >
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto flex flex-col items-center">
+          {/* Top Tag: Yellow Bar + Workflow */}
+          <motion.div
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : -8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4 }}
+            className="inline-flex items-center gap-2 mb-4"
+          >
+            <span className="w-1.5 h-4 bg-[#F5C238] rounded-xs inline-block shrink-0" />
+            <span className="text-xs sm:text-[13px] font-bold text-[#111111] tracking-wide font-sans">
+              Workflow
+            </span>
+          </motion.div>
+
+          {/* Heading with Yellow Accent Period Dot */}
+          <motion.h2
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, delay: 0.1 }}
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-black text-[#111111] tracking-[-0.03em] leading-[1.08] font-hero"
+            style={{
+              fontFamily: 'var(--font-inter), var(--font-sans), "Inter", "Plus Jakarta Sans", sans-serif',
+            }}
+          >
+            How PropFlow Works
+            <span className="inline-block w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#F5C238] ml-2 align-baseline" />
+          </motion.h2>
+
+          {/* Subheading */}
+          <motion.p
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, delay: 0.15 }}
+            className="mt-4 sm:mt-5 text-[#666666] font-sans text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
+          >
+            From data collection to deal closure, a simple and automated workflow.
+          </motion.p>
         </div>
 
-        {/* Section Heading with Editorial Serif & Overlapping Orange Accent Circle behind "Deal" */}
-        <h2 className="text-3xl sm:text-5xl font-serif font-bold tracking-tight text-white mb-4 max-w-3xl mx-auto leading-tight">
-          From First Contact to{" "}
-          <span className="relative inline-block z-10 mx-1">
-            <span className="absolute -top-3 -left-3 w-16 h-16 md:w-20 md:h-20 bg-[#FF5C1C] rounded-full -z-10 opacity-90" aria-hidden="true" />
-            <span className="relative z-10 text-white">Closed Deal</span>
-          </span>
-        </h2>
+        {/* 4 Step Cards Pipeline with Connecting Line & Nodes */}
+        <div className="mt-12 sm:mt-16">
+          {/* Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8 relative">
+            {steps.map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: idx * 0.1 }}
+                className="rounded-2xl bg-white border border-[#EAEAEA] p-6 shadow-[0_2px_16px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:border-[#D0D0D0] transition-all duration-300 flex flex-col items-start h-full relative"
+              >
+                {/* Horizontal Pipeline Connector between this card and the next card */}
+                {idx < steps.length - 1 && (
+                  <div className="hidden lg:flex absolute top-[52%] left-full w-6 xl:w-8 -translate-y-1/2 items-center justify-center z-20 pointer-events-none">
+                    {/* Continuous grey connecting line */}
+                    <div className="w-full h-[1.5px] bg-[#E5E5E5]" />
+                    {/* Perfectly centered yellow ring node */}
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2 border-[#F5C238] bg-white shrink-0 shadow-2xs" />
+                  </div>
+                )}
 
-        {/* Subtext */}
-        <p className="max-w-2xl mx-auto text-base text-slate-300 font-sans mb-14 leading-relaxed">
-          One continuous pipeline connecting lead capture, AI match precision, site walkthroughs,
-          negotiation, and commission payout.
-        </p>
+                {/* Icon Box */}
+                <div className="w-12 h-12 rounded-xl bg-[#F4F5F7] text-black flex items-center justify-center mb-6 shrink-0 shadow-2xs">
+                  {item.icon}
+                </div>
 
-        {/* Pinned Sequence with Animated Stepper */}
-        <PinnedSteps
-          steps={steps}
-          activeStepIndex={activeStepIndex}
-          onSelectStep={(idx) => setActiveStepIndex(idx)}
-          renderDetail={renderDetail}
-        />
+                {/* Step Number */}
+                <span className="text-xs font-bold text-[#888888] tracking-wider block mb-1">
+                  {item.step}
+                </span>
+
+                {/* Title */}
+                <h3 className="text-base sm:text-lg font-bold text-[#111111] leading-snug mb-1.5">
+                  {item.title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-xs sm:text-[13px] text-[#666666] leading-relaxed">
+                  {item.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom CTA Buttons */}
+        <motion.div
+          initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45, delay: 0.4 }}
+          className="flex flex-wrap items-center justify-center gap-3.5 mt-12 sm:mt-14"
+        >
+          <a
+            href="/dashboard"
+            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-[#F5C238] hover:bg-[#E5B228] text-black font-bold text-xs sm:text-sm shadow-xs transition-all duration-200"
+          >
+            <span>See Full Workflow</span>
+            <ArrowRight size={16} />
+          </a>
+
+          <button
+            type="button"
+            onClick={() => setIsDemoOpen(true)}
+            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white border border-[#D5D5D5] hover:border-black text-[#111111] font-bold text-xs sm:text-sm shadow-xs transition-all duration-200 cursor-pointer"
+          >
+            <Play size={12} className="fill-black stroke-none" />
+            <span>Watch Demo</span>
+          </button>
+        </motion.div>
       </div>
+
+      <DemoModal isOpen={isDemoOpen} onClose={() => setIsDemoOpen(false)} />
     </section>
   );
 }

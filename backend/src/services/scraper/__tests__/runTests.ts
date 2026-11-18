@@ -56,7 +56,12 @@ async function runTests() {
   // --- Test 6: Database Upsert & Deduplication ---
   console.log('\n--- Test Suite 6: Database Upsert & Duplicate Prevention ---');
   const mockProps = PropIQScraperService.generateMockScrapedProperties();
-  const testProp: ScrapedProperty = mockProps[0];
+  const uniqueTestId = `test_upsert_${Date.now()}`;
+  const testProp: ScrapedProperty = {
+    ...mockProps[0],
+    externalId: uniqueTestId,
+    sourceUrl: `https://www.magicbricks.com/propertyDetails/${uniqueTestId}`,
+  };
 
   const firstUpsert = await PropertyDatabaseService.upsertScrapedProperty(testProp);
   assertEqual(firstUpsert.success, true, 'First upsert succeeds');

@@ -1,4 +1,4 @@
-// Prisma Schema for PropIQ Backend & Real Estate Scraper
+// Prisma Schema for PropFlow Backend & Real Estate Scraper
 
 generator client {
   provider = "prisma-client-js"
@@ -28,6 +28,38 @@ enum FurnishingStatus {
   FURNISHED
 }
 
+model Agency {
+  id         String      @id @default(uuid())
+  name       String
+  subdomain  String?     @unique
+  users      User[]
+  properties Property[]
+  leads      Lead[]
+  brokers    Broker[]
+  siteVisits SiteVisit[]
+  deals      Deal[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@map("agencies")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  agencyId     String
+  agency       Agency   @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("Senior Broker") // "Agency Admin" | "Senior Broker" | "Field Agent"
+  avatar       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([agencyId])
+  @@map("users")
+}
+
 model Property {
   id               String            @id @default(uuid())
   externalId       String            @unique
@@ -55,6 +87,12 @@ model Property {
   amenities        String[]
   images           String[]
 
+  // Relations
+  agencyId         String?
+  agency           Agency?           @relation(fields: [agencyId], references: [id], onDelete: SetNull)
+  siteVisits       SiteVisit[]
+  deals            Deal[]
+
   // Timestamps
   scrapedAt        DateTime          @default(now())
   createdAt        DateTime          @default(now())
@@ -62,6 +100,7 @@ model Property {
 
   @@index([locality, city])
   @@index([price, bedrooms])
+  @@index([agencyId])
   @@map("properties")
 }
 
@@ -96,6 +135,8 @@ enum DealStage {
 
 model Lead {
   id                  String       @id @default(uuid())
+  agencyId            String?
+  agency              Agency?      @relation(fields: [agencyId], references: [id], onDelete: SetNull)
   name                String
   phone               String
   email               String?
@@ -107,40 +148,47 @@ model Lead {
   preferredLocalities String[]
   notes               String?
   assignedBrokerId    String?
-  assignedBroker      Broker?      @relation(fields: [assignedBrokerId], references: [id])
+  assignedBroker      Broker?      @relation(fields: [assignedBrokerId], references: [id], onDelete: SetNull)
   siteVisits          SiteVisit[]
   deals               Deal[]
   createdAt           DateTime     @default(now())
   updatedAt           DateTime     @updatedAt
 
   @@index([status, intent])
+  @@index([agencyId])
   @@map("leads")
 }
 
 model Broker {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
+  agencyId    String?
+  agency      Agency?   @relation(fields: [agencyId], references: [id], onDelete: SetNull)
   name        String
-  email       String   @unique
+  email       String    @unique
   phone       String?
-  role        String   @default("Senior Broker")
-  status      String   @default("Active")
-  dealsClosed Int      @default(0)
-  revenue     Float    @default(0)
-  activeDeals Int      @default(0)
+  role        String    @default("Senior Broker")
+  status      String    @default("Active")
+  dealsClosed Int       @default(0)
+  revenue     Float     @default(0)
+  activeDeals Int       @default(0)
   avatar      String?
   leads       Lead[]
   deals       Deal[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
+  @@index([agencyId])
   @@map("brokers")
 }
 
 model SiteVisit {
   id          String      @id @default(uuid())
+  agencyId    String?
+  agency      Agency?     @relation(fields: [agencyId], references: [id], onDelete: SetNull)
   leadId      String
   lead        Lead        @relation(fields: [leadId], references: [id], onDelete: Cascade)
   propertyId  String?
+  property    Property?   @relation(fields: [propertyId], references: [id], onDelete: SetNull)
   scheduledAt DateTime
   status      VisitStatus @default(PENDING)
   agentName   String?
@@ -149,27 +197,36 @@ model SiteVisit {
   updatedAt   DateTime    @updatedAt
 
   @@index([leadId])
+  @@index([propertyId])
+  @@index([agencyId])
+  @@index([scheduledAt])
   @@map("site_visits")
 }
 
 model Deal {
-  id              String    @id @default(uuid())
+  id              String     @id @default(uuid())
+  agencyId        String?
+  agency          Agency?    @relation(fields: [agencyId], references: [id], onDelete: SetNull)
   title           String
   leadId          String
-  lead            Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  lead            Lead       @relation(fields: [leadId], references: [id], onDelete: Cascade)
   propertyId      String?
+  property        Property?  @relation(fields: [propertyId], references: [id], onDelete: SetNull)
   brokerId        String?
-  broker          Broker?   @relation(fields: [brokerId], references: [id], onDelete: SetNull)
-  stage           DealStage @default(NEGOTIATION)
+  broker          Broker?    @relation(fields: [brokerId], references: [id], onDelete: SetNull)
+  stage           DealStage  @default(NEGOTIATION)
   buyerBid        Float
   builderAsk      Float
   agreedPrice     Float?
-  brokeragePct    Float     @default(2.0)
+  brokeragePct    Float      @default(2.0)
   brokerageAmount Float?
-  status          String    @default("ACTIVE")
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  status          String     @default("ACTIVE")
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
 
   @@index([leadId])
+  @@index([propertyId])
+  @@index([agencyId])
+  @@index([stage])
   @@map("deals")
 }

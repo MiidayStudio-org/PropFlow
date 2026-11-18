@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
+import { Playfair_Display, Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
 
 const serifFont = Playfair_Display({
@@ -16,6 +16,13 @@ const sansFont = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+const interFont = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
+});
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -24,11 +31,11 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "PropIQ — AI-Powered Real Estate Intelligence & Scraper Platform",
+  title: "PropFlow — AI-Powered Real Estate Operating System & CRM",
   description:
-    "A modern real estate intelligence platform combining automated property portal scraping, predictive analytics, pipeline CRM, and automated property matching.",
+    "A modern real estate operating system combining automated property portal scraping, AI lead-to-property matching, deal pipeline CRM, and team workflows.",
   keywords: [
-    "PropIQ",
+    "PropFlow",
     "Real Estate Scraper",
     "Real Estate CRM",
     "AI Real Estate Intelligence",
@@ -36,11 +43,14 @@ export const metadata: Metadata = {
     "Property Matching AI",
     "Broker CRM",
   ],
-  authors: [{ name: "PropIQ Team" }],
-  creator: "PropIQ",
+  authors: [{ name: "PropFlow Team" }],
+  creator: "PropFlow",
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/icon.svg",
     apple: "/logo.svg",
   },
 };
@@ -53,9 +63,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${serifFont.variable} ${sansFont.variable} scroll-smooth antialiased`}
+      className={`${serifFont.variable} ${sansFont.variable} ${interFont.variable} scroll-smooth antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#111111] selection:bg-[#FF5C1C] selection:text-white font-sans">
+      <body
+        className="min-h-screen flex flex-col bg-[#FFFFFF] text-[#111111] selection:bg-[#F5C238] selection:text-black font-sans"
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>

@@ -1,22 +1,17 @@
 import { prisma } from '../../db/prisma';
 import { ScrapedProperty } from './types';
 
-// In-memory fallback storage when PostgreSQL/Prisma database is offline or not configured
-const memoryStore = new Map<string, ScrapedProperty>();
-
 export class PropertyDatabaseService {
   /**
    * Upsert a single scraped property listing without creating duplicate entries.
-   * Keyed on `externalId` and `sourceUrl`.
+   * Keyed on `externalId` and `sourceUrl` in PostgreSQL.
    */
   static async upsertScrapedProperty(property: ScrapedProperty): Promise<{ success: boolean; isNew: boolean; error?: string }> {
-    const hasDbUrl = Boolean(process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost:5432/PropIQ_db'));
     try {
-      if (!hasDbUrl) {
-        throw new Error('DATABASE_URL not configured for live PostgreSQL');
+      if (!process.env.DATABASE_URL) {
+        throw new Error('DATABASE_URL not configured for PostgreSQL');
       }
 
-      // Attempt Prisma DB Upsert
       const existing = await prisma.property.findUnique({
         where: { externalId: property.externalId },
       });
@@ -69,25 +64,18 @@ export class PropertyDatabaseService {
         },
       });
 
-      // Mirror in memory store
-      memoryStore.set(property.externalId, property);
-
       return { success: true, isNew };
     } catch (err: any) {
-      // Fallback to in-memory storage if database connection is not initialized
-      const isNew = !memoryStore.has(property.externalId);
-      memoryStore.set(property.externalId, property);
-
       return {
-        success: true,
-        isNew,
-        error: `Prisma offline, stored in fallback memory store: ${err.message || err}`,
+        success: false,
+        isNew: false,
+        error: `PostgreSQL upsert error: ${err.message || err}`,
       };
     }
   }
 
   /**
-   * Bulk upsert an array of scraped property listings
+   * Bulk upsert an array of scraped property listings directly into PostgreSQL
    */
   static async bulkUpsertScrapedProperties(properties: ScrapedProperty[]): Promise<{
     processed: number;
@@ -122,44 +110,37 @@ export class PropertyDatabaseService {
   }
 
   /**
-   * Retrieve stored properties from DB or fallback memory
+   * Retrieve all stored properties directly from PostgreSQL
    */
   static async getAllProperties(): Promise<ScrapedProperty[]> {
-    const hasDbUrl = Boolean(process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost:5432/PropIQ_db'));
-    try {
-      if (!hasDbUrl) throw new Error('No DB');
-      const dbProps = await prisma.property.findMany();
-      if (dbProps.length > 0) {
-        return dbProps.map((p) => ({
-          externalId: p.externalId,
-          title: p.title,
-          description: p.description || undefined,
-          propertyType: p.propertyType as any,
-          listingType: p.listingType as any,
-          price: p.price,
-          currency: p.currency,
-          carpetAreaSqFt: p.carpetAreaSqFt,
-          bedrooms: p.bedrooms,
-          bathrooms: p.bathrooms,
-          furnishingStatus: (p.furnishingStatus as any) || undefined,
-          location: {
-            address: p.address,
-            locality: p.locality,
-            city: p.city,
-            latitude: p.latitude || undefined,
-            longitude: p.longitude || undefined,
-          },
-          amenities: p.amenities,
-          images: p.images,
-          sourceUrl: p.sourceUrl,
-          scrapedAt: p.scrapedAt,
-        }));
-      }
-    } catch {
-      // Fallback
-    }
+    const dbProps = await prisma.property.findMany({
+      orderBy: { scrapedAt: 'desc' },
+    });
 
-    return Array.from(memoryStore.values());
+    return dbProps.map((p) => ({
+      externalId: p.externalId,
+      title: p.title,
+      description: p.description || undefined,
+      propertyType: p.propertyType as any,
+      listingType: p.listingType as any,
+      price: p.price,
+      currency: p.currency,
+      carpetAreaSqFt: p.carpetAreaSqFt,
+      bedrooms: p.bedrooms,
+      bathrooms: p.bathrooms,
+      furnishingStatus: (p.furnishingStatus as any) || undefined,
+      location: {
+        address: p.address,
+        locality: p.locality,
+        city: p.city,
+        latitude: p.latitude || undefined,
+        longitude: p.longitude || undefined,
+      },
+      amenities: p.amenities,
+      images: p.images,
+      sourceUrl: p.sourceUrl,
+      scrapedAt: p.scrapedAt,
+    }));
   }
 
   /**
